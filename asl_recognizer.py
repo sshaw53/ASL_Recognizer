@@ -93,8 +93,14 @@ class ASL:
             image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             cv2.imshow('ASL Recognizer', image)
 
+            # Record the hand locations if the user presses 'p' key
+            if cv2.waitKey(15) == ord('p'):
+                for landmark in results.hand_landmarks:
+                    for i in range (21):
+                        print(str(i) + " " + str(landmark[i]))
+
             # Break the loop if the user presses 'q'
-            if cv2.waitKey(50) & 0xFF == ord('q'):
+            if cv2.waitKey(15) & 0xFF == ord('q'):
                 break
                     
         self.video.release()
