@@ -35,6 +35,8 @@ class ASL:
 
         # Letter
         self.letter = ''
+
+        self.data = {}
     
     def draw_landmarks_on_hand(self, image, detection_result):
         """
@@ -63,6 +65,19 @@ class ASL:
                                        solutions.drawing_styles.get_default_hand_landmarks_style(),
                                        solutions.drawing_styles.get_default_hand_connections_style())
 
+    def copy_info(self, index, landmark_info):
+        landmark_names = ["WRIST", "THUMB_CMC", "THUMB_MCP", "THUMB_IP", "THUMB_TIP", "INDEX_FINGER_MCP", "INDEX_FINGER_PIP", "INDEX_FINGER_DIP",
+                            "INDEX_FINGER_TIP","MIDDLE_FINGER_MCP", "MIDDLE_FINGER_PIP", "MIDDLE_FINGER_DIP", "MIDDLE_FINGER_TIP", "RING_FINGER_MCP",
+                            "RING_FINGER_MCP", "RING_FINGER_PIP", "RING_FINGER_DIP", "RING_FINGER_TIP", "PINKY_MCP", "PINKY_PIP", "PINKY_DIP", "PINKY_TIP"]
+        if landmark_names[index] + "_X" not in self.data and landmark_names[index] + "_Y" not in self.data:
+            self.data[landmark_names[index] + "_X"] = []
+            self.data[landmark_names[index] + "_Y"] = []
+
+        self.data[landmark_names[index] + "_X"].append(landmark_info.x)
+        self.data[landmark_names[index] + "_Y"].append(landmark_info.y)
+
+
+    
     def run(self):
         """
         Main game loop. Runs until the 
@@ -97,7 +112,9 @@ class ASL:
             if cv2.waitKey(15) == ord('p'):
                 for landmark in results.hand_landmarks:
                     for i in range (21):
-                        print(str(i) + " " + str(landmark[i]))
+                        self.copy_info(i, landmark[i])
+                
+                print(self.data)
 
             # Break the loop if the user presses 'q'
             if cv2.waitKey(15) & 0xFF == ord('q'):
