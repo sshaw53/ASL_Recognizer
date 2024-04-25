@@ -10,6 +10,7 @@ import mediapipe as mp
 from mediapipe import solutions
 from mediapipe.framework.formats import landmark_pb2
 import cv2
+import pandas as pd
 
 BLUE = (0, 0, 255)
 
@@ -115,6 +116,10 @@ class ASL:
                         self.copy_info(i, landmark[i])
                 
                 print(self.data)
+                # where to turn it into a dataframe
+                # USE: data_frame = pd.DataFrame.from_dict(self.data)
+                # clear using self.data.clear()
+
 
             # Break the loop if the user presses 'q'
             if cv2.waitKey(15) & 0xFF == ord('q'):
