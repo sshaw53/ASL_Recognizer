@@ -73,31 +73,14 @@ class ASL:
     def copy_info(self, index, landmark_info):
         landmark_names = ["WRIST", "THUMB_CMC", "THUMB_MCP", "THUMB_IP", "THUMB_TIP", "INDEX_FINGER_MCP", "INDEX_FINGER_PIP", "INDEX_FINGER_DIP",
                             "INDEX_FINGER_TIP","MIDDLE_FINGER_MCP", "MIDDLE_FINGER_PIP", "MIDDLE_FINGER_DIP", "MIDDLE_FINGER_TIP", "RING_FINGER_MCP",
-                            "RING_FINGER_MCP", "RING_FINGER_PIP", "RING_FINGER_DIP", "RING_FINGER_TIP", "PINKY_MCP", "PINKY_PIP", "PINKY_DIP", "PINKY_TIP"]
+                            "RING_FINGER_PIP", "RING_FINGER_DIP", "RING_FINGER_TIP", "PINKY_MCP", "PINKY_PIP", "PINKY_DIP", "PINKY_TIP"]
+        
         if landmark_names[index] + "_X" not in self.data and landmark_names[index] + "_Y" not in self.data:
             self.data[landmark_names[index] + "_X"] = []
             self.data[landmark_names[index] + "_Y"] = []
 
-        if landmark_info == None:
-            self.data[landmark_names[index] + "_X"].append(None)
-            self.data[landmark_names[index] + "_Y"].append(None)
-        else:
-            self.data[landmark_names[index] + "_X"].append(landmark_info.x)
-            self.data[landmark_names[index] + "_Y"].append(landmark_info.y)
-
-        # Fixing the varying len of array issue
-        largest_len = 0
-        for key in self.data:
-            if key != "Letter":
-                if len(self.data[key]) > largest_len:
-                    largest_len = len(self.data[key])
-            
-        for key in self.data:
-            if key != 'Letter':
-                if len(self.data[key]) < largest_len:
-                    for i in range (largest_len - len(self.data[key])):
-                        self.data[key].append(None)
-        
+        self.data[landmark_names[index] + "_X"].append(landmark_info.x)
+        self.data[landmark_names[index] + "_Y"].append(landmark_info.y)
         self.data["Letter"] = self.currenttrack_letter
 
     
@@ -138,22 +121,22 @@ class ASL:
 
             # Record the hand locations if the user presses 'p' key
             if key_pressed == ord('p'):
-                # landmark_names = ["WRIST", "THUMB_CMC", "THUMB_MCP", "THUMB_IP", "THUMB_TIP", "INDEX_FINGER_MCP", "INDEX_FINGER_PIP", "INDEX_FINGER_DIP",
-                #             "INDEX_FINGER_TIP","MIDDLE_FINGER_MCP", "MIDDLE_FINGER_PIP", "MIDDLE_FINGER_DIP", "MIDDLE_FINGER_TIP", "RING_FINGER_MCP",
-                #             "RING_FINGER_MCP", "RING_FINGER_PIP", "RING_FINGER_DIP", "RING_FINGER_TIP", "PINKY_MCP", "PINKY_PIP", "PINKY_DIP", "PINKY_TIP"]
-                # for i in range (21):
-                #     if landmark_names[i] in results.hand_landmarks:
-                #         self.copy_info(i, results.hand_landmarks[smth][i])
-                #     else:
-                #         self.copy_info(i, None)
-
-                for landmark in results.hand_landmarks:
-                    for i in range (21):
-                        self.copy_info(i, landmark[i])
-                # for landmark in results.hand_landmarks:
-                #     print(landmark)
+                for i in range (21):
+                    self.copy_info(i, results.hand_landmarks[0][i])
+                                
+                # Fixing the varying len of array issue
+                largest_len = 0
+                for key in self.data:
+                    if key != "Letter":
+                        if len(self.data[key]) > largest_len:
+                            largest_len = len(self.data[key])
                 
-                #print(self.data)
+                    
+                for key in self.data:
+                    if key != 'Letter':
+                        if len(self.data[key]) < largest_len:
+                            for i in range (largest_len - len(self.data[key])):
+                                self.data[key].append(None)
             
             # Changes to the next letter for data capturing
             if key_pressed == ord('n'):
@@ -166,7 +149,7 @@ class ASL:
                 # Turn the dict data into a dataframe
                 data_frame = pd.DataFrame.from_dict(self.data)
                 data_frame.to_csv('data/landmark_locations.csv', index=False, mode='a')
-                #data_frame.to_csv('data/landmark_locations', index=False)
+                #data_frame.to_csv('data/landmark_locations.csv', index=False)
                 break
 
         self.video.release()
