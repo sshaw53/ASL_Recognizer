@@ -11,6 +11,7 @@ from mediapipe import solutions
 from mediapipe.framework.formats import landmark_pb2
 import cv2
 import pandas as pd
+from sklearn.neighbors import KNeighborsClassifier
 
 BLUE = (0, 0, 255)
 
@@ -116,9 +117,33 @@ class ASL:
             # Change the color of the frame back
             image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             cv2.imshow('ASL Recognizer', image)
+            
+            # Getting the coordinates of the hand landmarks at a given moment
+            to_test = []
+            for i in range (21):
+                to_test.append(results.hand_landmarks[0][i].x)
+                to_test.append(results.hand_landmarks[0][i].y)
+            
+            # Train + Create the model
+            df = pd.read_csv("data/landmark_locations.csv")
+            features = ['WRIST_X', 'WRIST_Y', 'THUMB_CMC_X', 'THUMB_CMC_Y', 'THUMB_MCP_X', 'THUMB_MCP_Y', 'THUMB_IP_X', 'THUMB_IP_Y', 'THUMB_TIP_X',
+                'THUMB_TIP_Y', 'INDEX_FINGER_MCP_X', 'INDEX_FINGER_MCP_Y', 'INDEX_FINGER_PIP_X', 'INDEX_FINGER_PIP_Y', 'INDEX_FINGER_DIP_X', 'INDEX_FINGER_DIP_Y', 
+                'INDEX_FINGER_TIP_X', 'INDEX_FINGER_TIP_Y', 'MIDDLE_FINGER_MCP_X', 'MIDDLE_FINGER_MCP_Y', 'MIDDLE_FINGER_PIP_X', 'MIDDLE_FINGER_PIP_Y', 
+                'MIDDLE_FINGER_DIP_X', 'MIDDLE_FINGER_DIP_Y', 'MIDDLE_FINGER_TIP_X', 'MIDDLE_FINGER_TIP_Y', 'RING_FINGER_MCP_X', 'RING_FINGER_MCP_Y', 
+                'RING_FINGER_PIP_X', 'RING_FINGER_PIP_Y', 'RING_FINGER_DIP_X', 'RING_FINGER_DIP_Y', 'RING_FINGER_TIP_X', 'RING_FINGER_TIP_Y', 'PINKY_MCP_X', 
+                'PINKY_MCP_Y', 'PINKY_PIP_X', 'PINKY_PIP_Y', 'PINKY_DIP_X', 'PINKY_DIP_Y', 'PINKY_TIP_X', 'PINKY_TIP_Y']
+            X = df[features]
+            y = df["Letter"]
+
+            model = KNeighborsClassifier(n_neighbors=13)
+            model = model.fit(X, y)
+
+            # Put in the hand coordinates as the features and save the label into self.letter
+            self.letter = model.predict([to_test])
 
             key_pressed = cv2.waitKey(15) & 0xFF
 
+            # FOR DATA COLLECTING
             # Record the hand locations if the user presses 'p' key
             if key_pressed == ord('p'):
                 for i in range (21):
@@ -149,7 +174,6 @@ class ASL:
                 # Turn the dict data into a dataframe
                 data_frame = pd.DataFrame.from_dict(self.data)
                 data_frame.to_csv('data/landmark_locations.csv', index=False, mode='a')
-                #data_frame.to_csv('data/landmark_locations.csv', index=False)
                 break
 
         self.video.release()
