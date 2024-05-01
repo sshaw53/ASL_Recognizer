@@ -55,7 +55,7 @@ class ASL:
         X = df[features]
         y = df["Letter"]
 
-        self.model = KNeighborsClassifier(n_neighbors=13)
+        self.model = KNeighborsClassifier(n_neighbors=11)
         self.model = self.model.fit(X, y)
     
     def draw_landmarks_on_hand(self, image, detection_result):
@@ -134,13 +134,15 @@ class ASL:
             
             # Getting the coordinates of the hand landmarks at a given moment
             to_test = []
-            if len(results.hand_landmarks[0]) == 21:
-                for i in range (21):
+            #if len(results.hand_landmarks) == 21:
+            for i in range (21):
+                if len(results.hand_landmarks) > 0:
                     to_test.append(results.hand_landmarks[0][i].x)
                     to_test.append(results.hand_landmarks[0][i].y)
 
             # Put in the hand coordinates as the features and save the label into self.letter
-            self.letter = self.model.predict([to_test])
+            if len(to_test) > 0:
+                self.letter = self.model.predict([to_test])
 
             key_pressed = cv2.waitKey(15) & 0xFF
 
