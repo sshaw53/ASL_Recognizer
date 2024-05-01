@@ -55,7 +55,7 @@ class ASL:
         X = df[features]
         y = df["Letter"]
 
-        self.model = KNeighborsClassifier(n_neighbors=11)
+        self.model = KNeighborsClassifier(n_neighbors=9)
         self.model = self.model.fit(X, y)
     
     def draw_landmarks_on_hand(self, image, detection_result):
