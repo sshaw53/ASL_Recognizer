@@ -1,5 +1,5 @@
 """
-A game program uses hand tracking to 
+A program that uses hand tracking to 
 determine ASL letters.
 
 @author: Sierra Shaw
