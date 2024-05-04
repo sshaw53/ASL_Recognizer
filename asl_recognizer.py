@@ -38,6 +38,10 @@ class ASL:
         # Letter
         self.letter = ''
 
+        # Word - STRETCH GOAL IMPLEMENTATION
+        self.word = ''
+
+        # To collect data
         self.data = {}
 
         self.data.clear()
@@ -118,6 +122,9 @@ class ASL:
             # Draw letter onto screen
             cv2.putText(image, str(self.letter), (50, 50), fontFace=cv2.FONT_HERSHEY_COMPLEX, fontScale=1, color=BLUE, thickness=2)
 
+            # Draw word onto screen
+            cv2.putText(image, "Word: " + str(self.word), (50, 300), fontFace=cv2.FONT_HERSHEY_COMPLEX, fontScale=1, color=BLUE, thickness=2)
+
             # Draw the rectangle size on the screen
             cv2.rectangle(image, (400,150), (900,650), BLUE, 4)
 
@@ -171,6 +178,14 @@ class ASL:
                 self.currenttrack_letter
                 code = ord(self.currenttrack_letter)
                 self.currenttrack_letter = chr(code + 1)
+
+            # Adds to the word if created
+            if key_pressed == ord('a'):
+                self.word += self.letter
+
+            # Clears word
+            if key_pressed == ord('x'):
+                self.word = ''
 
             # Break the loop if the user presses 'q'
             if key_pressed == ord('q'):
