@@ -48,20 +48,20 @@ class ASL:
 
         self.currenttrack_letter = 'a'
 
-        # # Train + Create the model
-        # df = pd.read_csv("data/landmark_locations.csv")
-        # features = ['WRIST_X', 'WRIST_Y', 'WRIST_Z', 'THUMB_CMC_X', 'THUMB_CMC_Y', 'THUMB_CMC_Z', 'THUMB_MCP_X', 'THUMB_MCP_Y', 'THUMB_MCP_Z', 'THUMB_IP_X', 'THUMB_IP_Y', 'THUMB_IP_Z', 
-        #             'THUMB_TIP_X','THUMB_TIP_Y', 'THUMB_TIP_Z', 'INDEX_FINGER_MCP_X', 'INDEX_FINGER_MCP_Y', 'INDEX_FINGER_MCP_Z', 'INDEX_FINGER_PIP_X', 'INDEX_FINGER_PIP_Y', 'INDEX_FINGER_PIP_Z', 
-        #             'INDEX_FINGER_DIP_X', 'INDEX_FINGER_DIP_Y', 'INDEX_FINGER_DIP_Z', 'INDEX_FINGER_TIP_X', 'INDEX_FINGER_TIP_Y', 'INDEX_FINGER_TIP_Z', 'MIDDLE_FINGER_MCP_X', 'MIDDLE_FINGER_MCP_Y', 
-        #             'MIDDLE_FINGER_MCP_Z', 'MIDDLE_FINGER_PIP_X', 'MIDDLE_FINGER_PIP_Y', 'MIDDLE_FINGER_PIP_Z', 'MIDDLE_FINGER_DIP_X', 'MIDDLE_FINGER_DIP_Y', 'MIDDLE_FINGER_DIP_Z', 'MIDDLE_FINGER_TIP_X', 
-        #             'MIDDLE_FINGER_TIP_Y', 'MIDDLE_FINGER_TIP_Z', 'RING_FINGER_MCP_X', 'RING_FINGER_MCP_Y', 'RING_FINGER_MCP_Z', 'RING_FINGER_PIP_X', 'RING_FINGER_PIP_Y', 'RING_FINGER_PIP_Z', 'RING_FINGER_DIP_X', 
-        #             'RING_FINGER_DIP_Y', 'RING_FINGER_DIP_Z', 'RING_FINGER_TIP_X', 'RING_FINGER_TIP_Y', 'RING_FINGER_TIP_Z','PINKY_MCP_X', 'PINKY_MCP_Y', 'PINKY_MCP_Z', 'PINKY_PIP_X', 'PINKY_PIP_Y', 'PINKY_PIP_Z',
-        #             'PINKY_DIP_X', 'PINKY_DIP_Y', 'PINKY_DIP_Z', 'PINKY_TIP_X', 'PINKY_TIP_Y', 'PINKY_TIP_Z']
-        # X = df[features]
-        # y = df["Letter"]
+        # Train + Create the model
+        df = pd.read_csv("data/landmark_locations_2.csv")
+        features = ['WRIST_X', 'WRIST_Y', 'WRIST_Z', 'THUMB_CMC_X', 'THUMB_CMC_Y', 'THUMB_CMC_Z', 'THUMB_MCP_X', 'THUMB_MCP_Y', 'THUMB_MCP_Z', 'THUMB_IP_X', 'THUMB_IP_Y', 'THUMB_IP_Z', 
+                    'THUMB_TIP_X','THUMB_TIP_Y', 'THUMB_TIP_Z', 'INDEX_FINGER_MCP_X', 'INDEX_FINGER_MCP_Y', 'INDEX_FINGER_MCP_Z', 'INDEX_FINGER_PIP_X', 'INDEX_FINGER_PIP_Y', 'INDEX_FINGER_PIP_Z', 
+                    'INDEX_FINGER_DIP_X', 'INDEX_FINGER_DIP_Y', 'INDEX_FINGER_DIP_Z', 'INDEX_FINGER_TIP_X', 'INDEX_FINGER_TIP_Y', 'INDEX_FINGER_TIP_Z', 'MIDDLE_FINGER_MCP_X', 'MIDDLE_FINGER_MCP_Y', 
+                    'MIDDLE_FINGER_MCP_Z', 'MIDDLE_FINGER_PIP_X', 'MIDDLE_FINGER_PIP_Y', 'MIDDLE_FINGER_PIP_Z', 'MIDDLE_FINGER_DIP_X', 'MIDDLE_FINGER_DIP_Y', 'MIDDLE_FINGER_DIP_Z', 'MIDDLE_FINGER_TIP_X', 
+                    'MIDDLE_FINGER_TIP_Y', 'MIDDLE_FINGER_TIP_Z', 'RING_FINGER_MCP_X', 'RING_FINGER_MCP_Y', 'RING_FINGER_MCP_Z', 'RING_FINGER_PIP_X', 'RING_FINGER_PIP_Y', 'RING_FINGER_PIP_Z', 'RING_FINGER_DIP_X', 
+                    'RING_FINGER_DIP_Y', 'RING_FINGER_DIP_Z', 'RING_FINGER_TIP_X', 'RING_FINGER_TIP_Y', 'RING_FINGER_TIP_Z','PINKY_MCP_X', 'PINKY_MCP_Y', 'PINKY_MCP_Z', 'PINKY_PIP_X', 'PINKY_PIP_Y', 'PINKY_PIP_Z',
+                    'PINKY_DIP_X', 'PINKY_DIP_Y', 'PINKY_DIP_Z', 'PINKY_TIP_X', 'PINKY_TIP_Y', 'PINKY_TIP_Z']
+        X = df[features]
+        y = df["Letter"]
 
-        # self.model = KNeighborsClassifier(n_neighbors=9)
-        # self.model = self.model.fit(X, y)
+        self.model = KNeighborsClassifier(n_neighbors=9)
+        self.model = self.model.fit(X, y)
     
     def draw_landmarks_on_hand(self, image, detection_result):
         """
@@ -142,17 +142,17 @@ class ASL:
             image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             cv2.imshow('ASL Recognizer Take 2', image)
             
-            # # Getting the coordinates of the hand landmarks at a given moment
-            # to_test = []
-            # for i in range (21):
-            #     if len(results.hand_landmarks) > 0:
-            #         to_test.append(results.hand_landmarks[0][i].x)
-            #         to_test.append(results.hand_landmarks[0][i].y)
-            #         to_test.append(results.hand_landmarks[0][i].z)
+            # Getting the coordinates of the hand landmarks at a given moment
+            to_test = []
+            for i in range (21):
+                if len(results.hand_landmarks) > 0:
+                    to_test.append(results.hand_landmarks[0][i].x)
+                    to_test.append(results.hand_landmarks[0][i].y)
+                    to_test.append(results.hand_landmarks[0][i].z)
 
-            # # Put in the hand coordinates as the features and save the label into self.letter
-            # if len(to_test) > 0:
-            #     self.letter = self.model.predict([to_test])
+            # Put in the hand coordinates as the features and save the label into self.letter
+            if len(to_test) > 0:
+                self.letter = self.model.predict([to_test])
 
             key_pressed = cv2.waitKey(15) & 0xFF
 
