@@ -6,7 +6,7 @@ A real-time American Sign Language (ASL) fingerspelling recognizer that uses web
 
 1. **Hand tracking** — [MediaPipe HandLandmarker](https://developers.google.com/mediapipe) detects 21 landmark points on a single hand from the live webcam feed.
 2. **Feature extraction** — the (x, y) coordinates of all 21 landmarks are used as input features.
-3. **Classification** — a `KNeighborsClassifier` (scikit-learn), trained on a labeled dataset of landmark positions per letter, predicts the most likely ASL letter in real time.
+3. **Classification** — a `KNeighborsClassifier` (scikit-learn), trained on 6,000+ labeled samples of landmark positions per letter, predicts the most likely ASL letter in real time.
 4. **Display** — OpenCV renders the live video feed with the hand skeleton overlay, the predicted letter, and the word being built.
 
 ## Features
